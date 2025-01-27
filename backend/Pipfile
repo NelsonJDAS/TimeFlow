@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+flask-cors = "*"
+psycopg2 = "*"
+flask-admin = "*"
+
+[scripts]
+start = "python wsgi.py"
+migrate = "flask db migrate -m 'New migration'"
+upgrade = "flask db upgrade"
+
