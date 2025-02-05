@@ -88,7 +88,7 @@ La base de datos estará disponible en `http://127.0.0.1:5000/admin`
 
 ---
 
-### Migraciones en el backend
+### Migraciones en el backend.
 
 Flask-Migrate se utiliza para manejar cambios en los modelos y reflejarlos en la base de datos. Sigue estos pasos:
 
