@@ -1,4 +1,4 @@
-# Plantilla Fullstack con React, Flask, SQLAlchemy, PostgreSQL, Tailwind CSS e i18n
+# Plantilla Fullstack con React, Flask, SQLAlchemy, PostgreSQL, Tailwind CSS e i18n.
 
 Esta plantilla está diseñada para proyectos fullstack utilizando las siguientes tecnologías:
 
