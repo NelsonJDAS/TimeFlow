@@ -48,13 +48,13 @@ p {
     font-size: 25px;
 }
 
-.color-principal {
+/* .color-principal {
     color: #96FFFA;
 }
 
 .color-segundario {
     color: #0DFCF0;
-}
+} */
 
 .animacion-descripcion{
     transform: translateX(40px);
