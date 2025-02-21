@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Header from "../../../Components/Header";
+import Presentacion from "../../../components/Presentacion";
+import ContenedorArchivo from "../../../components/ContenedorArchivo";
 
 const Home = () => {
   const [message, setMessage] = useState("");
@@ -34,32 +37,9 @@ const Home = () => {
 
   return (
     <div>
-      <div className="flex justify-center items-center flex-col mb-[100px]">
-        <h1 className="text-center text-3xl font-bold underline">
-          Comprobación traducciones
-        </h1>
-        <h1 className="text-center text-2xl">{t("home")}</h1>
-        <div>
-        <button
-          onClick={() => changeLanguage("en")}
-          className="m-2 p-2 bg-blue-500 text-white rounded"
-        >
-          English
-        </button>
-        <button
-          onClick={() => changeLanguage("es")}
-          className="m-2 p-2 bg-blue-500 text-white rounded"
-        >
-          Español
-        </button>
-        </div>
-      </div>
-      <div className="flex justify-center items-center flex-col">
-      <h1 className="text-center text-3xl font-bold underline mb-9">
-        Comprobación backend / API
-      </h1>
-      <h2>{message || "Loading..."}</h2>
-      </div>
+      <Header/>
+      <Presentacion/>
+      <ContenedorArchivo/>
     </div>
   );
 };

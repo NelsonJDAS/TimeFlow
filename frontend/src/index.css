@@ -1,3 +1,63 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+p {
+    text-align: justify;
+  }
+  
+
+.animacion-desvanecer{
+    opacity: 0.2;
+    transition: opacity 1.1s ease-in-out;
+}
+
+.animacion-desvanecer.activa{
+    opacity: 1;
+}
+
+.animacion-izq {
+    opacity: 0.2;
+    transition: opacity 1.1s ease-in-out, transform 1.6s ease-in-out;
+    transform: translateX(-20px);
+}
+
+.animacion-izq.activa{
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.header-height {
+    height: 140px;
+}
+
+.color-principal {
+    color: #96FFFA;
+}
+
+.color-segundario {
+    color: #0DFCF0;
+}
+
+.animacion-descripcion{
+    opacity: 0.2;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.animacion-descripcion.activa{
+    opacity: 1;
+}
+
+.contenedor-archivo{
+    background-color: #96FFFA;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.2);
+    height: 200px;
+}
+
+.icono-descarga{
+    font-size: 60px !important;
+}
