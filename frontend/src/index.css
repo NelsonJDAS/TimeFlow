@@ -35,6 +35,19 @@ p {
     height: 140px;
 }
 
+.creador-footer {
+    margin: 95px 0px 0px 20px;
+    font-size: 12px;
+}
+
+
+.derechos-footer {
+    font-size: 12px;
+}
+.icono-footer {
+    font-size: 25px;
+}
+
 .color-principal {
     color: #96FFFA;
 }
@@ -44,11 +57,13 @@ p {
 }
 
 .animacion-descripcion{
+    transform: translateX(40px);
     opacity: 0.2;
-    transition: opacity 1.7s ease-in-out;
+    transition: opacity 1.4s ease-in-out, transform 1.6s ease-in-out;
 }
 
 .animacion-descripcion.activa{
+    transform: translateX(0px);
     opacity: 1;
 }
 

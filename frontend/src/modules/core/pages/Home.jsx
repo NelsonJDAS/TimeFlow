@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import Header from "../../../Components/Header";
 import Presentacion from "../../../components/Presentacion";
 import ContenedorArchivo from "../../../components/ContenedorArchivo";
+import Footer from "../../../components/Footer";
+import ContenedorHoras from "../../../components/ContenedorHoras";
 
 const Home = () => {
   const [message, setMessage] = useState("");
@@ -40,6 +42,8 @@ const Home = () => {
       <Header/>
       <Presentacion/>
       <ContenedorArchivo/>
+      <ContenedorHoras/>
+      <Footer/>
     </div>
   );
 };
