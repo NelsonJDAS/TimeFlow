@@ -1,5 +1,7 @@
 import { MdOutlineFileDownload } from "react-icons/md";
 import { useEffect, useRef, useState } from "react"
+import pdfToText from 'react-pdftotext';
+
 
 const ContenedorArchivo = () => {
     const [userLoad, setUserLoad] = useState(false);
@@ -7,11 +9,21 @@ const ContenedorArchivo = () => {
 
     const archivoRef = useRef("");
 
-    const handleArchivo = (e) => {
-        setArchivo(e)
-        console.log(e)
-    }
+    const handleArchivo = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          pdfToText(file)
+            .then((extractedText) => {
+              setArchivo(extractedText);
+            })
+            .catch((error) => {
+              console.error('Error al extraer el texto del PDF:', error);
+            });
+        }
+      };
 
+
+    
     useEffect(() => {
         setUserLoad(true)
     }, [])
@@ -20,7 +32,7 @@ const ContenedorArchivo = () => {
     return (
         <>
             <button onClick={() => {
-                console.log(archivo.target.files[0])
+                console.log(archivo)
             }}>dasda</button>
             <div className={`contenedor-archivo container w-80 mt-4 rounded-3 align-content-center ${userLoad ? "animacion-contenedor activa" : "animacion-contenedor"}`} onClick={() => console.log("")}>
                 <input type="file" accept=".pdf" className="" ref={archivoRef} onChange={handleArchivo} />
