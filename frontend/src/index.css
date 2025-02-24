@@ -85,5 +85,15 @@ p {
 }
 
 .icono-descarga{
+    transition: text-shadow 1.5s ease;
     font-size: 60px !important;
+}
+
+.contenedor-usuarios{
+    min-height: 100px;
+    max-height: 220px;
+}
+
+.lista-usuarios{
+    transition: opacity 1.5s ease-in-out;
 }

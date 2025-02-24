@@ -8,7 +8,7 @@ const Presentacion = () => {
     }, [])
 
     return (
-        <div className={`container ${userLoad ? "animacion-descripcion activa" : "animacion-descripcion"}`}>
+        <div className={`container mb-4 ${userLoad ? "animacion-descripcion activa" : "animacion-descripcion"}`}>
             <h1 className="mb-3 text-center  text-info fw-bold fs-2">Bievenido a TimeFlow</h1>
             <p className="text-secondary px-2">
                 Timeflow es la app que simplifica la gestión de tu horario.
