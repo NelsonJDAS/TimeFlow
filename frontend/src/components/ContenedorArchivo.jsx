@@ -1,5 +1,6 @@
 import { MdOutlineFileDownload } from "react-icons/md";
 import { useEffect, useRef, useState } from "react"
+import { useStore } from "../Store/store"
 import pdfToText from 'react-pdftotext';
 
 
@@ -7,6 +8,11 @@ const ContenedorArchivo = () => {
     const [userLoad, setUserLoad] = useState(false);
     const [users, setUsers] = useState("");
     const [userStats, setUserStats] = useState("");
+    const [fileName, setFileName] = useState("");
+    const { usuarios, usuariosStats } = useStore();
+
+    const AgregarUsuarios = useStore((state) => state.AgregarUsuarios)
+    const AgregarUsuarioStats = useStore((state) => state.AgregarUsuarioStats)
 
     const archivoRef = useRef("");
 
@@ -36,12 +42,14 @@ const ContenedorArchivo = () => {
                 dias_libres: libre
             }
         })
-        console.log(UsersStats)
+        AgregarUsuarioStats(UsersStats)
+        setUserStats(userStats)
     }
 
 
     const handleArchivo = (event) => {
         const file = event.target.files[0];
+        setFileName(file.name)
         if (file) {
             pdfToText(file)
                 .then((extractedText) => {
@@ -93,6 +101,7 @@ const ContenedorArchivo = () => {
                         dias: dias,
                         usuarios,
                     });
+                    AgregarUsuarios(users)
                     ExtraerStats(usuarios)
                 })
                 .catch((error) => {
@@ -107,17 +116,17 @@ const ContenedorArchivo = () => {
         setUserLoad(true)
     }, [])
 
-    // archivoRef.current.click()
+
     return (
         <>
-            <button onClick={() => {
-                console.log(users)
+            <button type="file" onClick={() => {
+                console.log(usuarios, usuariosStats)
             }}>dasda</button>
-            <div className={`contenedor-archivo container w-80 mt-4 rounded-3 align-content-center ${userLoad ? "animacion-contenedor activa" : "animacion-contenedor"}`} onClick={() => console.log("")}>
-                <input type="file" accept=".pdf" className="" ref={archivoRef} onChange={handleArchivo} />
+            <div className={`contenedor-archivo container w-80 mt-4 rounded-3 align-content-center ${userLoad ? "animacion-contenedor activa" : "animacion-contenedor"}`} onClick={() => archivoRef.current.click()}>
+                <input type="file" accept=".pdf" className="d-none" ref={archivoRef} onChange={handleArchivo} />
                 <i className="row icono-descarga text-secondary">  <MdOutlineFileDownload /></i>
                 <p className="text-center text-secondary">{users != "" ? "Archivo subido" : "Haz click para subir el archivo"}</p>
-                {/* {archivo != "" && <p className="text-center text-secondary opacity-50 mt-1">{archivo.split("\\")[archivo.split("\\").length - 1]}</p>} */}
+                {users != "" && <p className="text-center text-secondary opacity-50 mt-1">{fileName.split("\\")[fileName.split("\\").length - 1]}</p>}
             </div>
         </>
     )
