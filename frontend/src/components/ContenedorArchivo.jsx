@@ -5,34 +5,57 @@ import pdfToText from 'react-pdftotext';
 
 const ContenedorArchivo = () => {
     const [userLoad, setUserLoad] = useState(false);
-    const [archivo, setArchivo] = useState("");
+    const [users, setUsers] = useState("");
+    const [userStats, setUserStats] = useState("");
 
     const archivoRef = useRef("");
 
-    function ConvertirHora(hora) {
+    const ConvertirHora = (hora) => {
         const [horas, minutos] = hora.split(':').map(Number);
         return horas + minutos / 60;
     }
+    const ExtraerStats = (Users) => {
+        let UsersStats = Object.values(Users).map((user) => {
+            let libre = 0
+            let vacaciones = 0
+            let horas = 0
+            for (let i = 0; i < user.horas.length; i++) {
+                if (user.horas[i].includes("Libre")) {
+                    libre++
+                } else if (user.horas[i].includes("Vacaciones")) {
+                    vacaciones++
+                } else {
+                    horas = horas + (user.horas[i][1] - user.horas[i][0]) 
+                }
+                console.log(user.nombre ,libre, vacaciones, horas)
+            }
+            return {
+                nombre: user.nombre,
+                horas: horas,
+                vacaciones: vacaciones,
+                dias_libres: libre
+            }
+        })
+        console.log(UsersStats)
+    }
+
 
     const handleArchivo = (event) => {
         const file = event.target.files[0];
         if (file) {
             pdfToText(file)
                 .then((extractedText) => {
-                    console.log(extractedText)
-                    const textoFiltrado = extractedText.replace(/\b[lL]\b/g, "0_Libre")
-                    .replace(/\b[vV]\b/g, "0_Vacaciones").replace(/(?<!:)\b\d+\b(?!:)/g, "")
+                    let textoFiltrado = extractedText.toLowerCase().replace(/\b[lL]\b/g, "0_Libre")
+                    .replace(/\b[vV]\b/g, "0_Vacaciones").replace(/(?<!:)\b\d+\b(?!:)/g, "").replace(/festivo/g, "")
                     
                     let dias = extractedText.match(/(?<!:)\b\d+\b(?!:)/g);
 
-                    console.log(dias)
-                    const textoDivido = textoFiltrado.split(/\s(?=[a-zA-Z])/);
-
-                    console.log(textoDivido)
+                    textoFiltrado = textoFiltrado.split(/\s(?=[a-zA-Z])/);
                     
-                    const Usuarios = textoDivido.map((user) => {
+                    let usuarios = textoFiltrado.map((user) => {
                         if (/\d/.test(user)) {
                             let UserFiltrado = user.replace(/0_/g, "")
+
 
                             const [nombre, ...horas] = UserFiltrado.split(/\s+/)
 
@@ -44,23 +67,33 @@ const ContenedorArchivo = () => {
                                     horasAEnteros.push(horas[i])
                                 }
                             } 
+                            let hora = []
                             for (let i = 0; i < horasAEnteros.length; i += 2) {
-                                horasAEnteros.push(horasAEnteros.slice(i, i + 2));
+                                hora.push(horasAEnteros.slice(i, i + 2));
                             }
 
 
                                 return {
                                     nombre : nombre,
-                                    horas : horasAEnteros.slice(0, -1)
+                                    horas : hora.slice(0, -1)
                                 }
                             
                         }
                     })
-
-                    setArchivo({
+                    usuarios = usuarios.filter(user => user !== undefined)
+                    usuarios = usuarios.reduce((acc, item) => {
+                        if (!acc[item.nombre]) {
+                            acc[item.nombre] = { nombre: item.nombre, horas: [...item.horas] };
+                        } else {
+                            acc[item.nombre].horas.push(...item.horas);
+                        }
+                        return acc;
+                    }, {});
+                    setUsers({
                         dias: dias,
-                        Usuarios,
+                        usuarios,
                     });
+                    ExtraerStats(usuarios)
                 })
                 .catch((error) => {
                     console.error('Error al extraer el texto del PDF:', error);
@@ -78,12 +111,12 @@ const ContenedorArchivo = () => {
     return (
         <>
             <button onClick={() => {
-                console.log(archivo)
+                console.log(users)
             }}>dasda</button>
             <div className={`contenedor-archivo container w-80 mt-4 rounded-3 align-content-center ${userLoad ? "animacion-contenedor activa" : "animacion-contenedor"}`} onClick={() => console.log("")}>
                 <input type="file" accept=".pdf" className="" ref={archivoRef} onChange={handleArchivo} />
                 <i className="row icono-descarga text-secondary">  <MdOutlineFileDownload /></i>
-                <p className="text-center text-secondary">{archivo != "" ? "Archivo subido" : "Haz click para subir el archivo"}</p>
+                <p className="text-center text-secondary">{users != "" ? "Archivo subido" : "Haz click para subir el archivo"}</p>
                 {/* {archivo != "" && <p className="text-center text-secondary opacity-50 mt-1">{archivo.split("\\")[archivo.split("\\").length - 1]}</p>} */}
             </div>
         </>
