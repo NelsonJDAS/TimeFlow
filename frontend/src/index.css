@@ -90,10 +90,31 @@ p {
 }
 
 .contenedor-usuarios{
-    min-height: 100px;
-    max-height: 220px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .lista-usuarios{
     transition: opacity 1.5s ease-in-out;
 }
+
+.nombre-usuario{
+    font-size: 14px;
+}
+.fecha-calendario{
+    font-size: 14px;
+    width: 20px;
+}
+.calendario-valor {
+    font-size: 12px;
+    width: 20px;
+}
+.calendario-usuario{
+    transition: opacity 1.5s ease-in-out;
+    min-height: 150px;
+}
+.nombre-usuario-calendario{
+    font-size: 13px;
+    margin-top: 2px;
+}
+

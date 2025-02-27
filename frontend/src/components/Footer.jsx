@@ -12,11 +12,11 @@ const Footer = () => {
             backgroundPosition: 'center',     
             width: '100%',                   
             height: '150px',
-            margin: "-40px 0 0 0"               
+            margin: "-35px 0 0 0"               
         }}
         >
 
-            <div className="row">
+            <div className="row mx-0 ">
                 <div className="col-7">
                 <p className="creador-footer text-secondary">Creado por <a href="https://github.com/NelsonJDAS" target="_blank">NelsonJDAS</a></p>
                 </div>

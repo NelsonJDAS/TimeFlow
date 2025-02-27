@@ -33,6 +33,12 @@ const ContenedorArchivo = () => {
                 } else {
                     horas = horas + (user.horas[i][1] - user.horas[i][0]) 
                 }
+                
+            }
+            for (let i = 0; i < user.partido.length; i++) {
+                if (/\d/.test(user.partido[i])) {
+                    horas = horas + (user.partido[i][1] - user.partido[i][0]) 
+                }
     
             }
             return {
@@ -53,12 +59,14 @@ const ContenedorArchivo = () => {
         if (file) {
             try {
                 const extractedText = await pdfToText(file);
+                console.log(extractedText);
                 let textoFiltrado = extractedText.toLowerCase()
                     .replace(/\b[lL]\b/g, "0_Libre")
                     .replace(/\b[vV]\b/g, "0_Vacaciones")
                     .replace(/(?<!:)\b\d+\b(?!:)/g, "")
                     .replace(/festivo/g, "");
     
+                console.log(textoFiltrado)
                 let dias = extractedText.match(/(?<!:)\b\d+\b(?!:)/g);
     
                 textoFiltrado = textoFiltrado.split(/\s(?=[a-zA-Z])/);
@@ -84,27 +92,29 @@ const ContenedorArchivo = () => {
     
                         return {
                             nombre: nombre,
-                            horas: hora.slice(0, -1),
+                            horas: hora.slice(0, 14),
+                            partido: hora.slice(0, -1).slice(14, horas.length),
                         };
                     }
                 });
-    
+                console.log(usuarios)
                 usuarios = usuarios.filter((user) => user !== undefined);
                 usuarios = await usuarios.reduce((acc, item) => {
                     if (!acc[item.nombre]) {
-                        acc[item.nombre] = { nombre: item.nombre, horas: [...item.horas] };
+                        acc[item.nombre] = { nombre: item.nombre, horas: [...item.horas], partido: [...item.partido] };
                     } else {
                         acc[item.nombre].horas.push(...item.horas);
+                        acc[item.nombre].partido.push(...item.partido);
                     }
                     return acc;
                 }, {});
     
                 setUsers({
-                    dias: dias,
+                    dias: dias.sort((a, b) => a - b),
                     usuarios,
                 });
                 AgregarUsuarios({
-                    dias: dias,
+                    dias: dias.sort((a, b) => a - b),
                     usuarios,
                 });
                 ExtraerStats(usuarios);
@@ -126,7 +136,7 @@ const ContenedorArchivo = () => {
         <>
             <div className={`contenedor-archivo container w-80 mt-4 rounded-3 align-content-center ${userLoad ? "animacion-contenedor activa" : "animacion-contenedor"}`} onClick={() => archivoRef.current.click()}>
                 <input type="file" accept=".pdf" className="d-none" ref={archivoRef} onChange={handleArchivo} />
-                <i className={`row icono-descarga`}>  <MdOutlineFileDownload /></i>
+                <i className={`row mx-0 px-0 icono-descarga`}>  <MdOutlineFileDownload /></i>
                 <p className="text-center text-secondary">{users != "" ? "Archivo subido" : "Haz click para subir el archivo"}</p>
                 {users != "" && <p className="text-center text-secondary opacity-50 mt-1">{fileName.split("\\")[fileName.split("\\").length - 1]}</p>}
             </div>
