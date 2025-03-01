@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "../Store/store";
 import ColTabla from "./ColTabla";
 import CalendarioUsuario from "./CalendarioUsuario";
@@ -8,11 +8,21 @@ const ContenedorHoras = () => {
     const [userLoad, setUserLoad] = useState(false);
     const [select, setSelect] = useState("");
 
+    const selectRef = useRef("")
+
+
     const handleSelect = (e) => {
         console.log(e.target.value)
-        e.target.value == "Usuarios" ? setSelect("") : setSelect(e.target.value)
+        e.target.value == "usuarios" ? setSelect("") : setSelect(e.target.value)
         console.log(select)
     }
+
+    useEffect(() => {
+        if(usuarios == ""){
+            setSelect("")
+            selectRef.current.value = "usuarios"
+        }
+    }, [usuarios])
 
     useEffect(() => {
         setUserLoad(true)
@@ -25,11 +35,11 @@ const ContenedorHoras = () => {
 
             <div className={`row lista-usuarios ${usuariosStats.length != undefined ? "opacity-100" : "opacity-0"}`}>
                 <div className="col-6 fw-bold text-center align-content-center" onClick={() => { console.log(usuarios) }}>
-                    <h2>Dias {usuarios.dias != undefined && usuarios.dias[0]} - {usuarios.dias != undefined && usuarios.dias[usuarios.dias.length - 1]}</h2>
+                    <h2 onClick={() => console.log(usuariosStats)}>Dias {usuarios.dias != undefined && usuarios.dias[0]} - {usuarios.dias != undefined && usuarios.dias[usuarios.dias.length - 1]}</h2>
                 </div>
                 <div className="col-6 text-end">
-                    <select className="text-center border border-info text-secondary rounded-4 form-select form-select-sm" aria-label="Small select example" onChange={handleSelect}>
-                        <option key="User">Usuarios</option>
+                    <select className="text-center border border-info text-secondary rounded-4 form-select form-select-sm" aria-label="Small select example" onChange={handleSelect} ref={selectRef}>
+                        <option key="User">usuarios</option>
                         {usuariosStats.length > 0 && usuariosStats.map((user) => {
                             return <option key={user.nombre.toUpperCase()}>{user.nombre.toUpperCase()}</option>
                         })}

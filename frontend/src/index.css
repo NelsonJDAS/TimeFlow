@@ -117,4 +117,10 @@ p {
     font-size: 13px;
     margin-top: 2px;
 }
-
+.estadistica-usuario{
+    padding-top: 2.5px;
+    font-size: 13px;
+}
+.calendario{
+    box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.2);
+}
