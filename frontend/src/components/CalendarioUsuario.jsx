@@ -8,37 +8,26 @@ export default function CalendarioUsuario({ nombre }) {
     const { usuarios, usuariosStats } = useStore();
     const [user, setUser] = useState("");
     const [statsUser, setStatsUser] = useState("");
-    const [turnoPartido, setTurnoPartido] = useState("");
     const [userLoad, setUserLoad] = useState(false)
 
-    console.log(usuarios)
 
+    // filtramos la estadisticas del usuario a base del nombre del select
     useEffect(() => {
         if (usuariosStats.length > 0) {
-            let turnoPartido = 0
             Object.entries(usuarios.usuarios).filter((elem) => {
-                if (elem[0].toUpperCase() == nombre) {
-                    for (let i = 0; i < elem[1].partido.length; i++) {
-                        if (/\d/.test(elem[1].partido[i][0])) {
-                            console.log(elem[1].partido[i][1], elem[1].partido[i][0])
-                            turnoPartido = turnoPartido + (elem[1].partido[i][1] - elem[1].partido[i][0])
-                        }
-                        console.log(turnoPartido)
-                        setTurnoPartido(turnoPartido)
-                    }
-                    setUser(elem[1])
-                }
-
+                    elem[0].toUpperCase() == nombre && setUser(elem[1])
             })
             usuariosStats.filter((elem) => {
                 elem.nombre.toUpperCase() == nombre && setStatsUser(elem)
             })
         }
     }, [nombre])
+
     useEffect(() => {
         setUserLoad(true)
     }, [])
     return (
+        // condicion para asegurarnos que no cargue al no tener datos
         user != "" && usuarios != "" &&
         <div className='bg-secondary px-2 py-1 rounded-3 mt-3 bg-opacity-25 calendario mb-3'>
             <div className="row">
@@ -52,32 +41,34 @@ export default function CalendarioUsuario({ nombre }) {
             </div>
             <div className='mt-3 mx-1'>
                 <div className="d-flex">
-                    {usuarios.dias.slice(0, 14).map((elem) => {
-                        return <span className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
+                    {/* mapeo a los primeros 14 dias seguiendo el mismo algoritmo en toda la pagina */}
+                    {usuarios.dias.slice(0, 14).map((elem, index) => {
+                        return <span key={index} className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
                     })}
                 </div>
                 <div className="d-flex mt-1">
-                    {user.horas.slice(0, 14).map((elem) => {
+                     {/* mapeo a las primeras 14 horas seguiendo el mismo algoritmo en toda la pagina */}
+                    {user.horas.slice(0, 14).map((elem, index) => {
                         if (/\d/.test(elem)) {
-                            return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
+                            return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
                         } else {
-                            return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
+                            return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
                         }
 
                     })}
                 </div>
                 <div className="d-flex mt-2">
-                    {usuarios.dias.slice(14, 28).map((elem) => {
+                    {usuarios.dias.slice(14, 28).map((elem, index) => {
 
-                        return <span className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
+                        return <span key={index} className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
                     })}
                 </div>
                 <div className="d-flex mt-1">
-                    {user.horas.slice(14, 28).map((elem) => {
+                    {user.horas.slice(14, 28).map((elem, index) => {
                         if (/\d/.test(elem)) {
-                            return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
+                            return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
                         } else {
-                            return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
+                            return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
                         }
 
                     })}
@@ -85,17 +76,17 @@ export default function CalendarioUsuario({ nombre }) {
                 {usuarios.dias.length > 28 &&
                         <>
                             <div className="d-flex mt-2">
-                                {usuarios.dias.slice(28, usuarios.dias.length).map((elem) => {
+                                {usuarios.dias.slice(28, usuarios.dias.length).map((elem, index) => {
 
-                                    return <span className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
+                                    return <span key={index} className='fecha-calendario mx-1 text-center text-info fw-bold'>{elem}</span>
                                 })}
                             </div>
                             <div className="d-flex mt-1">
-                                {user.horas.slice(28, usuarios.dias.length).map((elem) => {
+                                {user.horas.slice(28, usuarios.dias.length).map((elem, index) => {
                                     if (/\d/.test(elem)) {
-                                        return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
+                                        return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[1] - elem[0]}</span>
                                     } else {
-                                        return <span className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
+                                        return <span key={index} className='mx-1 calendario-valor text-center text-black fw-bold'>{elem[0].slice(0, 1)}</span>
                                     }
 
                                 })}
@@ -104,7 +95,7 @@ export default function CalendarioUsuario({ nombre }) {
                     }
                 <div className="row mx-0">
                     <div className="col-12">
-                        <p className='text-center fw-bold text-info'>Horas Turno Partidos - {turnoPartido}</p>
+                        <p className='text-center fw-bold text-info'>Horas Turno Partidos - {statsUser.horas_partido}</p>
                     </div>
                 </div>
 

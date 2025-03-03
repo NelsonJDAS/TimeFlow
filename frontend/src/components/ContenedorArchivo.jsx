@@ -36,24 +36,31 @@ const ContenedorArchivo = () => {
             let libre = 0
             let vacaciones = 0
             let horas = 0
+            let turnoPartido = 0
+            for (let i = 0; i < user.partido.length; i++) {
+                if (/\d/.test(user.partido[i])) {
+                    turnoPartido = turnoPartido + (user.partido[i][1] - user.partido[i][0])
+                }
+            }
             for (let i = 0; i < user.horas.length; i++) {
                 if (user.horas[i].includes("Libre")) {
                     libre++
                 } else if (user.horas[i].includes("Vacaciones")) {
                     vacaciones++
-                } else if (/\d/.test(user.horas[i])){
-                    horas = horas + (user.horas[i][1] - user.horas[i][0]) 
-                } else {}
+                } else if (/\d/.test(user.horas[i])) {
+                    horas = horas + (user.horas[i][1] - user.horas[i][0])
+                } else { }
             }
             for (let i = 0; i < user.partido.length; i++) {
                 if (/\d/.test(user.partido[i])) {
-                    horas = horas + (user.partido[i][1] - user.partido[i][0]) 
+                    horas = horas + (user.partido[i][1] - user.partido[i][0])
                 }
-    
+
             }
             return {
                 nombre: user.nombre,
                 horas: horas,
+                horas_partido: turnoPartido,
                 vacaciones: vacaciones,
                 dias_libres: libre
             }
@@ -77,21 +84,40 @@ const ContenedorArchivo = () => {
 
                 //limpiamos todo el texto, todos los caracteres que no seas utiles
                 let textoFiltrado = extractedText.toLowerCase()
-                .replace(/\b[lL]\b/g, "0_Libre")
-                .replace(/\b[vV]\b/g, "0_Vacaciones")
-                .replace(/(?<!:)\b\d+\b(?!:)/g, "")
-                .replace(/festivo/g, "");
-                
+                    .replace(/\b[lL]\b/g, "0_Libre")
+                    .replace(/\b[vV]\b/g, "0_Vacaciones")
+                    .replace(/(?<!:)\b\d+\b(?!:)/g, "")
+                    .replace(/festivo/g, "");
+
                 //dividimos el texto a base de arrays
                 textoFiltrado = textoFiltrado.split(/\s(?=[a-zA-Z])/);
+
+                // extraemos los dias del texto
+                let dias = extractedText.match(/(?<!:)\b\d+\b(?!:)/g);
+
+                // dividimos los dias por si hay mas de un mes es decir que no se repitan los numeros
+                dias = dias.reduce((acc, item) => {
+                    if (!acc.vistos.has(item)) {
+                        acc.primermes.push(item);
+                        acc.vistos.add(item);
+                    } else {
+                        acc.segundomes.push(item);
+                    }
+                    return acc;
+                }, { primermes: [], segundomes: [], vistos: new Set() });
+
+
+                // los ordenamos de menor a mayor
+                dias = dias.primermes.sort((a, b) => a - b).concat(dias.segundomes.sort((a, b) => a - b))
+
 
                 //limpiamos los decoradores que separaban los usuarios y los filtramos dando un objeto con su nombre, horas y horas de turno partidos
                 let usuarios = await textoFiltrado.map((user) => {
                     if (/\d/.test(user)) {
                         let UserFiltrado = user.replace(/0_/g, "");
-    
+
                         const [nombre, ...horas] = UserFiltrado.split(/\s+/);
-    
+
                         let horasAEnteros = [];
                         for (let i = 0; i < horas.length; i++) {
                             if (/\d/.test(horas[i])) {
@@ -104,15 +130,15 @@ const ContenedorArchivo = () => {
                         for (let i = 0; i < horasAEnteros.length; i += 2) {
                             hora.push(horasAEnteros.slice(i, i + 2));
                         }
-    
+                        
                         return {
                             nombre: nombre,
-                            horas: hora.slice(0, 14),
-                            partido: hora.slice(0, -1).slice(14, horas.length),
+                            horas: dias.length < 14 ? hora.slice(0, dias.length) : hora.slice(0, 14),
+                            partido: dias.length < 14 ? hora.slice(dias.length - 1, horas.length) : hora.slice(0, -1).slice(14, horas.length),
                         };
                     }
                 });
-                
+                console.log(usuarios, dias)
                 usuarios = usuarios.filter((user) => user !== undefined);
                 usuarios = await usuarios.reduce((acc, item) => {
                     if (!acc[item.nombre]) {
@@ -123,26 +149,9 @@ const ContenedorArchivo = () => {
                     }
                     return acc;
                 }, {});
-                
-                // extraemos los dias del texto
-                let dias = extractedText.match(/(?<!:)\b\d+\b(?!:)/g);
 
-                // dividimos los dias por si hay mas de un mes es decir que no se repitan los numeros
-                dias = dias.reduce((acc, item) => {
-                    if (!acc.vistos.has(item)) {
-                        acc.primermes.push(item);
-                        acc.vistos.add(item); 
-                    } else {
-                        acc.segundomes.push(item);
-                    }
-                    return acc;
-                }, { primermes: [], segundomes: [], vistos: new Set() });
 
-                
-                // los ordenamos de menor a mayor
-                dias = dias.primermes.sort((a,b) => a-b).concat(dias.segundomes.sort((a,b) => a-b))
-                
-    
+
                 //subimos los datos tanto global como localmente en el componente
                 setUsers({
                     dias: dias,
@@ -158,7 +167,7 @@ const ContenedorArchivo = () => {
             }
         }
     };
-    
+
 
 
 
