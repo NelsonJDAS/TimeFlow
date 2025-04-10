@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Header from "../../../Components/Header";
+import Header from "../../../components/Header";
 import Presentacion from "../../../components/Presentacion";
 import ContenedorArchivo from "../../../components/ContenedorArchivo";
 import Footer from "../../../components/Footer";
