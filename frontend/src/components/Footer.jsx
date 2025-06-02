@@ -11,7 +11,7 @@ const Footer = () => {
             backgroundSize: 'cover',           
             backgroundPosition: 'center',     
             width: '100%',                   
-            height: '150px',
+            height: '151px',
             margin: "-35px 0 0 0"               
         }}
         >
